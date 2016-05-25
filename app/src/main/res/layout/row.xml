@@ -12,11 +12,11 @@
 
 
         <ImageView
-            android:id="@+id/ivImage"
+            android:id="@+id/tvImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_launcher"/>
+            android:layout_margin="8dp"/>
+            <!--android:src="@drawable/ic_launcher"/>-->
 
 
     </LinearLayout>
@@ -69,13 +69,16 @@
         android:id="@+id/tvSpouse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Katie Holmes"
+        android:textColor="#166CED"
+        android:text="Spouse: Katie Holmes"
         />
 
     <TextView
         android:id="@+id/tvChildren"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Various Children"/>
+        android:text="Children: Various Children"
+        android:textColor="#166CED"
+        />
 
 </LinearLayout>
