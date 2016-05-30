@@ -9,9 +9,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Exchanger;
 
@@ -46,12 +54,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    class JSONAsyncTask extends AsyncTask<String, Void, Boolean>{
+    class JSONAsyncTask extends AsyncTask<String, Void, Boolean> {
 
         ProgressDialog pd;
 
-        protected void OnPreExecute()
-        {
+        protected void OnPreExecute() {
             super.onPreExecute();
 
             //performing logic before execution of thread
@@ -64,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         //perform in the background
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Boolean doInBackground(String... urls) {
 
             try {
                 //perform a HTTP request to get the data
@@ -72,11 +79,10 @@ public class MainActivity extends AppCompatActivity {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpResponse response = httpclient.execute(httppost);
 
-                int statu = response.getStatuLine().getStatuCode();
+                int status = response.getStatusLine().getStatusCode();
 
                 //if the status returned is successful
-                if(status == 200)
-                {
+                if (status == 200) {
                     HttpEntity entity = response.getEntity();
                     String data = EntityUtils.toString(entity);
 
@@ -84,8 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray jsonArr = jsonObj.getJSONArray("actors");
 
                     //for each entity in the array list, populate the data
-                    for(int i = 0; i < jsonArr.length(); i++)
-                    {
+                    for (int i = 0; i < jsonArr.length(); i++) {
                         //get an object from the corresponding array value in the JSON Array
                         JSONObject obj = jsonArr.getJSONObject(i);
 
@@ -109,13 +114,25 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            catch(Exception e)
+
+            return false;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            pd.cancel();
+            adp.notifyDataSetChanged();
+            if(!result)
             {
-
+                Toast.makeText(getApplicationContext(), "Unable to fetch data from server", Toast.LENGTH_LONG).show();
             }
-
-            return null;
         }
     }
 }
