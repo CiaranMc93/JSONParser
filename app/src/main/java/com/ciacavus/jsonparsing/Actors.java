@@ -31,6 +31,10 @@ public class Actors {
 
     }
 
+    public Actors(){
+
+    }
+
     //individual function for getting and setting values for each information bit
     public String getName()
     {

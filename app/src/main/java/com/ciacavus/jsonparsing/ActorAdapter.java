@@ -1,6 +1,7 @@
 package com.ciacavus.jsonparsing;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -9,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -18,12 +21,22 @@ import java.util.ArrayList;
 /**
  * Created by ciaran on 25/05/2016.
  */
-public class ActorAdapter {
+public class ActorAdapter extends ArrayAdapter<Actors> implements ListAdapter  {
 
     ArrayList<Actors> listItem;
     LayoutInflater inflater;
     int Resource;
     ViewHolder holder;
+
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
 
     public class ViewHolder {
 
@@ -53,7 +66,7 @@ public class ActorAdapter {
             Bitmap Icon = null;
 
             try{
-                InputStream in = new java.net.URI(urlDisplay).openStream();
+                InputStream in = new java.net.URL(urlDisplay).openStream();
                 Icon = BitmapFactory.decodeStream(in);
 
             }catch (Exception e)
@@ -72,10 +85,41 @@ public class ActorAdapter {
     }
 
     public ActorAdapter(Context context, int resource, ArrayList<Actors> obj) {
+        super(context, resource, obj);
 
         inflater = (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         listItem = obj;
 
+    }
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+
+    }
+
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+
+    }
+
+    @Override
+    public int getCount() {
+        return 0;
+    }
+
+    @Override
+    public Actors getItem(int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
@@ -103,7 +147,7 @@ public class ActorAdapter {
 
         }
 
-        holder.imageView.setImageResource(R.drawable.ic_launcher);
+        holder.imageView.setImageResource(R.mipmap.ic_launcher);
 
         new DownloadImage(holder.imageView).execute(listItem.get(position).getImage());
 
@@ -116,6 +160,21 @@ public class ActorAdapter {
         holder.tvSpouse.setText(listItem.get(position).getSpouse());
 
         return v;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
     }
 }
 

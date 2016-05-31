@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Exchanger;
 
+import static com.ciacavus.jsonparsing.R.*;
+
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Actors> listItem;
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(layout.activity_main);
 
         //create new actors array
         listItem = new ArrayList<Actors>();
@@ -40,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
         new JSONAsyncTask().execute("http://microblogging.wingity.com/JSONParsingTutorial/jonActors");
 
         //link XML with Java Code
-        ListView lv = (ListView)findViewById(R.id.list);
+        ListView lv = (ListView)findViewById(id.list);
 
-        adp = new ActorAdapter(getApplicationContext(),R.layout.row,listItem);
+        adp = new ActorAdapter(getApplicationContext(), layout.row, listItem);
 
-        lv.setAdapter(null);
+        lv.setAdapter(adp);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -116,10 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
 
             return false;
@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result)
         {
             pd.cancel();
-            adp.notifyDataSetChanged();
             if(!result)
             {
                 Toast.makeText(getApplicationContext(), "Unable to fetch data from server", Toast.LENGTH_LONG).show();
